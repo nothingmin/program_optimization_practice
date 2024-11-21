@@ -6,8 +6,8 @@
 #define MAX_WORDS_CAPACITY 1000000  // 초기 단어 배열 크기
 #define MAX_WORD_LENGTH 100         // 단어의 최대 길이
 
-// 특수문자를 제거한 새로운 문자열 생성
-char *remove_special_characters(const char *input) {
+// 특수문자를 제거, 소문자 변환
+char *remove_special_characters_and_lower(const char *input) {
     size_t length = strlen(input);
     char *output = malloc((length + 1) * sizeof(char)); // +1은 널 문자 공간
 
@@ -15,7 +15,7 @@ char *remove_special_characters(const char *input) {
     for (int i = 0; input[i] != '\0'; i++) {
         if (isalnum(input[i])) {
             // 알파벳(a-z, A-Z) 또는 숫자(0-9)인지 확인
-            output[j++] = input[i];
+            output[j++] = tolower(input[i]);
         }
     }
     output[j] = '\0';
@@ -34,7 +34,7 @@ char **read_txt(const char *filename, int *wordCount) {
 
     while (fscanf(file, "%99s", word) == 1) {
         // 특수문자 제거
-        char *clean_word = remove_special_characters(word);
+        char *clean_word = remove_special_characters_and_lower(word);
 
         // 빈 단어는 무시
         if (strlen(clean_word) == 0) {
