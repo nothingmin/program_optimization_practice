@@ -8,7 +8,7 @@
 
 // 특수문자를 제거한 새로운 문자열 생성
 char *remove_special_characters(const char *input) {
-    int length = strlen(input);
+    size_t length = strlen(input);
     char *output = malloc((length + 1) * sizeof(char)); // +1은 널 문자 공간
 
     int j = 0;
@@ -18,7 +18,7 @@ char *remove_special_characters(const char *input) {
             output[j++] = input[i];
         }
     }
-    output[j] = '\0'; // 문자열 종료 문자 추가
+    output[j] = '\0';
 
     return output;
 }
@@ -42,23 +42,22 @@ char **read_txt(const char *filename, int *wordCount) {
             continue;
         }
 
-
-        // 단어를 동적으로 메모리 할당하여 저장
         words[*wordCount] = malloc(strlen(clean_word) + 1);
         strcpy(words[*wordCount], clean_word);
-        free(clean_word); // `clean_word`는 복사 후 해제
+        free(clean_word);
         (*wordCount)++;
     }
 
-    fclose(file); // 파일 닫기
-    return words; // 읽은 단어 배열 반환
+    fclose(file);
+    return words;
 }
 
 void main() {
     int wordCount;
     char **words = read_txt("example.txt", &wordCount);
-    printf("%d\n",  wordCount );
     for (int i = 0; i < wordCount; i++) {
         printf("%s\n", words[i]);
+        free(words[i]);
     }
+    free(words);
 }
