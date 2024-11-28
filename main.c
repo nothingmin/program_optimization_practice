@@ -5,6 +5,7 @@
 
 #define MAX_WORDS_CAPACITY 1000000  // 초기 단어 배열 크기
 #define MAX_WORD_LENGTH 100         // 단어의 최대 길이
+#define TABLE_SIZE 10007 // 해시 테이블 크기 (소수 사용 권장)
 
 // 특수문자를 제거, 소문자 변환
 char *remove_special_characters_and_lower(const char *input) {
@@ -52,9 +53,26 @@ char **read_txt(const char *filename, int *wordCount) {
     return words;
 }
 
+
+// 해시 함수: 단어를 정수로 변환
+unsigned int hash_word(const char *word) {
+    unsigned int hashValue = 0;
+    while (*word) {
+        hashValue = (hashValue * 31 + *word) % TABLE_SIZE; // 31은 일반적으로 사용되는 해싱 상수
+        word++;
+    }
+    return hashValue;
+}
+
+struct Node {
+    char *word;
+    int count;
+    struct Node *next;
+};
+
 void main() {
     int wordCount;
-    char **words = read_txt("example.txt", &wordCount);
+    char **words = read_txt("shakespeare.txt", &wordCount);
     for (int i = 0; i < wordCount; i++) {
         printf("%s\n", words[i]);
         free(words[i]);
