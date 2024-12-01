@@ -54,13 +54,21 @@ char **read_txt(const char *filename, int *wordCount) {
 }
 
 
-// 해시 함수: 단어를 정수로 변환
-unsigned int hash_word(const char *word) {
+unsigned int hash_words(const char *word1, const char *word2) {
     unsigned int hashValue = 0;
-    while (*word) {
-        hashValue = (hashValue * 31 + *word) % TABLE_SIZE; // 31은 일반적으로 사용되는 해싱 상수
-        word++;
+
+    // 첫 번째 단어를 해싱
+    while (*word1) {
+        hashValue = (hashValue * 31 + *word1) % TABLE_SIZE;
+        word1++;
     }
+
+    // 두 번째 단어를 해싱
+    while (*word2) {
+        hashValue = (hashValue * 31 + *word2) % TABLE_SIZE;
+        word2++;
+    }
+
     return hashValue;
 }
 
@@ -73,8 +81,8 @@ struct Node {
 void main() {
     int wordCount;
     char **words = read_txt("shakespeare.txt", &wordCount);
+
     for (int i = 0; i < wordCount; i++) {
-        printf("%s\n", words[i]);
         free(words[i]);
     }
     free(words);
