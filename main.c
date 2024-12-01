@@ -72,11 +72,13 @@ unsigned int hash_words(const char *word1, const char *word2) {
     return hashValue;
 }
 
-struct Node {
-    char *word;
+typedef struct Node {
+    char *word1;
+    char *word2;
     int count;
     struct Node *next;
-};
+} Node;
+
 
 void main() {
     int wordCount;
