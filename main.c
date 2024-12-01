@@ -79,13 +79,64 @@ typedef struct Node {
     struct Node *next;
 } Node;
 
+void insert_bigram(Node *bucket[], const char *word1, const char *word2) {
+    unsigned int hashIndex = hash_words(word1, word2);
+    // 해시 테이블에서 해당 인덱스의 연결 리스트 검색
+    Node *current = bucket[hashIndex];
+    while (current) {
+        if (strcmp(current->word1, word1) == 0 && strcmp(current->word2, word2) == 0) {
+            current->count++;
+            return;
+        }
+        current = current->next;
+    }
+    // 새로운 노드 추가
+    Node *newNode = malloc(sizeof(Node));
+    newNode->word1 = strdup(word1);
+    newNode->word2 = strdup(word2);
+    newNode->count = 1;
+    newNode->next = bucket[hashIndex];
+    bucket[hashIndex] = newNode;
+}
+
+void free_bucket(Node *bucket[], int size) {
+    for (int i = 0; i < size; i++) {
+        Node *current = bucket[i];
+        while (current) {
+            Node *temp = current;
+            current = current->next;
+            free(temp->word1);
+            free(temp->word2);
+            free(temp);
+        }
+    }
+}
+
+void initialize_bucket(Node *bucket[], int size) {
+    for (int i = 0; i < size; i++) {
+        bucket[i] = NULL;
+    }
+}
 
 void main() {
     int wordCount;
     char **words = read_txt("shakespeare.txt", &wordCount);
 
+    // 해시 테이블 초기화
+    Node *bucket[TABLE_SIZE];
+    initialize_bucket(bucket, TABLE_SIZE);
+
+    // 단어 쌍 삽입
+    for (int i = 0; i < wordCount - 1; i++) {
+        // wordCount - 1: 마지막 단어는 다음 단어가 없음
+        insert_bigram(bucket, words[i], words[i + 1]);
+    }
+
+    // 메모리 해제
     for (int i = 0; i < wordCount; i++) {
         free(words[i]);
     }
     free(words);
+    // 해시 테이블 메모리 해제
+    free_bucket(bucket, TABLE_SIZE);
 }
