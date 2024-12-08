@@ -136,7 +136,19 @@ int compare_by_count(const void *a, const void *b) {
     // count 내림차순 정렬
     return nodeB->count - nodeA->count;
 }
+void insertion_sort(Node **nodeArray, int nodeCount) {
+    for (int i = 1; i < nodeCount; i++) {
+        Node *key = nodeArray[i];
+        int j = i - 1;
 
+        // count 내림차순 기준으로 정렬
+        while (j >= 0 && nodeArray[j]->count < key->count) {
+            nodeArray[j + 1] = nodeArray[j];
+            j--;
+        }
+        nodeArray[j + 1] = key;
+    }
+}
 void main() {
     int wordCount;
     char **words = read_txt("shakespeare.txt", &wordCount);
@@ -151,7 +163,7 @@ void main() {
     Node **nodeArray = malloc(MAX_WORDS_CAPACITY * sizeof(Node *));
     int nodeCount = flat_bucket(bucket, TABLE_SIZE, nodeArray);
     // count 내림차순 정렬
-    qsort(nodeArray, nodeCount, sizeof(Node *), compare_by_count);
+    insertion_sort(nodeArray, nodeCount);
 
     // 메모리 해제
     for (int i = 0; i < wordCount; i++) {
