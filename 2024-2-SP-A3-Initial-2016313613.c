@@ -117,6 +117,7 @@ void free_bucket(Node *bucket[], int size) {
         }
     }
 }
+
 int flat_bucket(Node *bucket[], int size, Node **nodeArray) {
     int index = 0;
     for (int i = 0; i < size; i++) {
@@ -136,6 +137,7 @@ int compare_by_count(const void *a, const void *b) {
     // count 내림차순 정렬
     return nodeB->count - nodeA->count;
 }
+
 void insertion_sort(Node **nodeArray, int nodeCount) {
     for (int i = 1; i < nodeCount; i++) {
         Node *key = nodeArray[i];
@@ -149,6 +151,7 @@ void insertion_sort(Node **nodeArray, int nodeCount) {
         nodeArray[j + 1] = key;
     }
 }
+
 void main() {
     int wordCount;
     char **words = read_txt("shakespeare.txt", &wordCount);
@@ -164,6 +167,13 @@ void main() {
     int nodeCount = flat_bucket(bucket, TABLE_SIZE, nodeArray);
     // count 내림차순 정렬
     insertion_sort(nodeArray, nodeCount);
+
+    // 정렬된 결과 출력 (상위 10개만 출력)
+    printf("Top 10 Bigrams:\n");
+    for (int i = 0; i < (nodeCount < 10 ? nodeCount : 10); i++) {
+        printf("Bigram: (%s, %s), Count: %d\n",
+               nodeArray[i]->word1, nodeArray[i]->word2, nodeArray[i]->count);
+    }
 
     // 메모리 해제
     for (int i = 0; i < wordCount; i++) {

@@ -166,6 +166,13 @@ void main() {
     // count 내림차순 정렬
     qsort(nodeArray, nodeCount, sizeof(Node *), compare_by_count);
 
+    // 정렬된 결과 출력 (상위 10개만 출력)
+    printf("Top 10 Bigrams:\n");
+    for (int i = 0; i < (nodeCount < 10 ? nodeCount : 10); i++) {
+        printf("Bigram: (%s, %s), Count: %d\n",
+               nodeArray[i]->word1, nodeArray[i]->word2, nodeArray[i]->count);
+    }
+
     // 메모리 해제
     for (int i = 0; i < wordCount; i++) {
         free(words[i]);
